@@ -10,6 +10,7 @@ function App() {
   //   { id: 3, title: 'Learn a martial art', description: 'To exact vengeance upon my enemies' },
   // ]
   const [ideas, setIdeas] = useState([]);
+  const [error, setError] = useState('');
 
   // async function getIdeas() {
   //   const url = "http://localhost:3001/api/v1/ideas"
@@ -30,7 +31,7 @@ function App() {
     fetch('http://localhost:3001/api/v1/ideas')
     .then(response => response.json())
     .then(data => setIdeas([...ideas, ...data]))
-    .catch(error => console.log(error.message))
+    .catch(error => setError(error.message))
   }
 
   useEffect(() => {
@@ -45,7 +46,7 @@ function App() {
     })
     .then(response => response.json())
     .then(data => setIdeas([...ideas, data]))
-    .catch(error => console.log(error.message))
+    .catch(error => setError(error.message))
   }
 
   function deleteIdea(id) {
@@ -57,7 +58,7 @@ function App() {
         const filteredIdeas = ideas.filter(idea => idea.id !== id)
         setIdeas(filteredIdeas)
       })
-    .catch(error => console.log(error.message))
+    .catch(error => setError(error.message))
   }
 
   return(
@@ -65,6 +66,7 @@ function App() {
       <h1>IdeaBox</h1>
       {!ideas.length && <h2>No ideas yet -- add some!</h2>}
       <Form addIdea={addIdea}/>
+      {error && <h2>{error}</h2>}
       <Ideas ideas={ideas} deleteIdea={deleteIdea}/>
     </main>
   )
