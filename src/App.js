@@ -28,9 +28,9 @@ function App() {
 
   function getIdeas() {
     fetch('http://localhost:3001/api/v1/ideas')
-      .then(response => response.json())
-      .then(data => setIdeas([...ideas, ...data]))
-      .catch(error => console.log(error.message))
+    .then(response => response.json())
+    .then(data => setIdeas([...ideas, ...data]))
+    .catch(error => console.log(error.message))
   }
 
   useEffect(() => {
@@ -38,12 +38,26 @@ function App() {
   }, [])
 
   function addIdea(newIdea) {
-    setIdeas([...ideas, newIdea])
+    fetch('http://localhost:3001/api/v1/ideas', { 
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newIdea)
+    })
+    .then(response => response.json())
+    .then(data => setIdeas([...ideas, data]))
+    .catch(error => console.log(error.message))
   }
 
   function deleteIdea(id) {
-    const filteredIdeas = ideas.filter(idea => idea.id !== id)
-    setIdeas(filteredIdeas)
+    fetch(`http://localhost:3001/api/v1/ideas/${id}`, {
+      method: 'DELETE',
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(() => {
+        const filteredIdeas = ideas.filter(idea => idea.id !== id)
+        setIdeas(filteredIdeas)
+      })
+    .catch(error => console.log(error.message))
   }
 
   return(
